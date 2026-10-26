@@ -1,0 +1,39 @@
+{
+  "name": "pomodoro-app",
+  "version": "1.0.0",
+  "description": "Timer Pomodoro simples, local e confiavel - Electron + JS puro",
+  "main": "main.js",
+  "author": "SEU NOME",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.pomodoro.app",
+    "productName": "Pomodoro",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "style.css",
+      "renderer.js",
+      "sounds/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

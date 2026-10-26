@@ -1,0 +1,380 @@
+/* ==================================================
+   VARIÁVEIS GLOBAIS
+   Define as cores e a transição padrão da aplicação.
+   ================================================== */
+
+:root {
+  --bg: #1e1f29;
+  /* Cor de fundo principal */
+  --bg-soft: #262836;
+  /* Cor de fundo secundária, usada em painéis e elementos */
+  --text: #f4f4f6;
+  /* Cor principal dos textos */
+  --text-dim: #9a9cb0;
+  /* Cor de textos secundários */
+  --accent-work: #ff6b6b;
+  /* Cor de destaque da fase de trabalho */
+  --accent-rest: #4dd0a5;
+  /* Cor de destaque da fase de descanso */
+  --btn-bg: #33354a;
+  /* Cor de fundo padrão dos botões */
+  --btn-bg-hover: #3f4260;
+  /* Cor de fundo dos botões ao passar o mouse */
+  transition: background-color 0.4s ease;
+}
+
+/* Faz com que largura e altura incluam padding e bordas */
+* {
+  box-sizing: border-box;
+}
+
+/* Remove margens e preenchimentos padrão e ocupa toda a janela */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  /* Impede a exibição de barras de rolagem */
+}
+
+/* Estilos gerais do corpo da aplicação */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  user-select: none;
+  /* Impede a seleção acidental de textos */
+}
+
+/* Container principal: organiza os elementos verticalmente */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+}
+
+/* ==================================================
+   BARRA SUPERIOR
+   Contém o indicador de ciclo e o botão de configurações.
+   ================================================== */
+
+/* Distribui os elementos nas extremidades da barra */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Aparência do indicador do ciclo atual */
+.cycle-badge {
+  background: var(--bg-soft);
+  padding: 6px 14px;
+  border-radius: 999px;
+  /* Cria o formato de cápsula */
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+/* Botão de ícone usado para abrir as configurações */
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+/* Realça o botão de configurações ao passar o mouse */
+.icon-btn:hover {
+  color: var(--text);
+  background: var(--bg-soft);
+}
+
+/* ==================================================
+   ÁREA DO TEMPORIZADOR
+   Organiza a fase atual, o tempo e a próxima fase.
+   ================================================== */
+
+/* Ocupa o espaço disponível e centraliza o conteúdo */
+.timer-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Texto que identifica a fase atual */
+.phase-label {
+  font-size: clamp(16px, 4vw, 22px);
+  /* Ajusta o tamanho à tela */
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--accent-work);
+  transition: color 0.3s ease;
+}
+
+/* Altera a cor do indicador quando a fase é de descanso */
+.phase-label.rest {
+  color: var(--accent-rest);
+}
+
+/* Exibição principal do tempo restante */
+.time-display {
+  font-size: clamp(56px, 18vw, 108px);
+  /* Tamanho responsivo */
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  /* Mantém os algarismos alinhados */
+  line-height: 1;
+  letter-spacing: 2px;
+}
+
+/* Texto que informa qual será a próxima fase */
+.next-phase {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* ==================================================
+   BOTÕES PRINCIPAIS
+   Estilização dos controles de iniciar e pausar.
+   ================================================== */
+
+/* Organiza os botões horizontalmente */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+/* Estilo base compartilhado pelos botões */
+.btn {
+  flex: 1;
+  max-width: 140px;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+/* Altera o fundo dos botões habilitados ao passar o mouse */
+.btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+}
+
+/* Cria um efeito de pressionamento ao clicar */
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Indica visualmente que um botão está desabilitado */
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Aparência do botão de ação principal */
+.btn.primary {
+  background: var(--accent-work);
+  color: #1a1a1a;
+}
+
+/* Clareia levemente o botão principal ao passar o mouse */
+.btn.primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+/* ==================================================
+   PAINEL DE CONFIGURAÇÕES
+   Overlay e painel para ajustar os tempos do Pomodoro.
+   ================================================== */
+
+/* Camada que cobre a janela quando as configurações são abertas */
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  /* Ocupa toda a área disponível */
+  background: rgba(0, 0, 0, 0.55);
+  /* Escurece o fundo */
+  display: none;
+  /* Permanece oculto inicialmente */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Torna o overlay visível quando recebe a classe "visible" */
+.settings-overlay.visible {
+  display: flex;
+}
+
+/* Caixa central que contém os campos de configuração */
+.settings-panel {
+  background: var(--bg-soft);
+  padding: 24px;
+  border-radius: 14px;
+  width: 85%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Estilização do título das configurações */
+.settings-panel h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+/* Aparência dos rótulos dos campos */
+.settings-panel label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* Aparência dos campos numéricos de configuração */
+.settings-panel input {
+  background: var(--bg);
+  border: 1px solid #3a3c50;
+  color: var(--text);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+/* Organiza os botões de cancelar e salvar */
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Permite que os botões das configurações ocupem o espaço disponível */
+.settings-actions .btn {
+  max-width: none;
+}
+
+/* ==================================================
+   HORÁRIO DE TÉRMINO E BOTÕES SECUNDÁRIOS
+   ================================================== */
+
+/* Utiliza o esquema de cores escuro no seletor de horário */
+input[type="time"] {
+  color-scheme: dark;
+}
+
+/* Área reservada para informações sobre o horário de término */
+.end-info {
+  min-height: 18px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* Destaca mensagens de erro */
+.end-info.error {
+  color: var(--accent-work);
+}
+
+/* Organiza os controles de definição do horário de término */
+.end-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+/* Estilo do rótulo do horário de término */
+.end-time label {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* Aparência do campo para selecionar o horário */
+.end-time input {
+  background: var(--bg-soft);
+  border: 1px solid #3a3c50;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+/* Reduz o tamanho do botão de definir o horário */
+.btn.small {
+  flex: 0 0 auto;
+  max-width: none;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+/* Remove o espaçamento inferior dos controles secundários */
+.controls.secondary {
+  padding-bottom: 0;
+}
+
+/* Estilo específico dos botões de reiniciar fase, ciclo e tudo */
+.controls.secondary .btn {
+  max-width: none;
+  padding: 10px 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid #3a3c50;
+}
+
+/* Realça os botões secundários ao passar o mouse */
+.controls.secondary .btn:hover:not(:disabled) {
+  background: var(--btn-bg);
+}
+
+/* ==================================================
+   EDIÇÃO MANUAL DO TEMPO
+   Estiliza o campo que substitui o relógio durante a edição.
+   ================================================== */
+
+/* Indica que o relógio pode ser clicado */
+.time-display {
+  cursor: pointer;
+}
+
+/* Garante que o relógio e o campo de edição respeitem o atributo hidden */
+.time-display[hidden],
+.time-edit[hidden] {
+  display: none;
+}
+
+/* Aparência do campo de edição manual do tempo */
+.time-edit {
+  width: 5.5ch;
+  /* Largura aproximada de cinco caracteres e meio */
+  font-family: inherit;
+  font-size: clamp(56px, 18vw, 108px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: center;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid #3a3c50;
+  border-radius: 12px;
+  padding: 4px 8px;
+  user-select: text;
+  /* Permite selecionar e editar o conteúdo */
+}

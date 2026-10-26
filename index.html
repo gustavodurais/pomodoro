@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <!-- Define a codificação de caracteres e o título da aplicação -->
+  <meta charset="UTF-8" />
+  <title>Pomodoro</title>
+
+  <!-- Política de segurança: restringe as fontes de conteúdo permitidas na aplicação -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self';" />
+
+  <!-- Importa a folha de estilos responsável pela aparência da interface -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Container principal da aplicação -->
+  <div class="app" id="app">
+
+    <!-- Barra superior: exibe o ciclo atual e permite abrir as configurações -->
+    <header class="top-bar">
+      <!-- Identifica o ciclo atual do Pomodoro -->
+      <span class="cycle-badge" id="cycleLabel">Ciclo 1</span>
+
+      <!-- Botão para abrir o painel de configurações -->
+      <button class="icon-btn" id="openSettingsBtn" title="Configurações">⚙</button>
+    </header>
+
+    <!-- Área central do temporizador -->
+    <main class="timer-area">
+
+      <!-- Indica a fase atual: trabalho ou descanso -->
+      <div class="phase-label" id="phaseLabel">TRABALHO</div>
+
+      <!-- Exibe o tempo restante; pode ser clicado para editar o tempo manualmente -->
+      <div class="time-display" id="timeDisplay" title="Clique para editar o tempo">25:00</div>
+
+      <!-- Campo de edição do tempo, oculto até ser necessário -->
+      <!-- Aceita formatos como MM:SS ou um valor em minutos -->
+      <input type="text" class="time-edit" id="timeEditInput" hidden autocomplete="off" spellcheck="false"
+        aria-label="Editar tempo restante (MM:SS ou minutos)" />
+
+      <!-- Informa qual será a próxima fase do ciclo -->
+      <div class="next-phase" id="nextPhaseLabel">Próximo: Descanso</div>
+
+      <!-- Área para informações sobre o horário de término -->
+      <!-- aria-live permite que leitores de tela anunciem alterações nesse conteúdo -->
+      <div class="end-info" id="endInfo" aria-live="polite"></div>
+    </main>
+
+    <!-- Controles para definir o horário em que a fase atual deve terminar -->
+    <section class="end-time">
+      <label for="endTimeInput">Terminar às</label>
+
+      <!-- Campo para selecionar um horário -->
+      <input type="time" id="endTimeInput" />
+
+      <!-- Define o horário escolhido e inicia o temporizador -->
+      <button class="btn small" id="setEndTimeBtn"
+        title="A fase atual passa a terminar nesse horário e o timer inicia">Definir e iniciar</button>
+    </section>
+
+    <!-- Controles principais do temporizador -->
+    <section class="controls">
+
+      <!-- Inicia o temporizador -->
+      <button class="btn primary" id="startBtn">Iniciar</button>
+
+      <!-- Pausa o temporizador; começa desabilitado -->
+      <button class="btn" id="pauseBtn" disabled>Pausar</button>
+    </section>
+
+    <!-- Controles secundários para reiniciar fases e ciclos -->
+    <section class="controls secondary">
+
+      <!-- Reinicia apenas a fase atual, seja trabalho ou descanso -->
+      <button class="btn" id="restartPhaseBtn" title="Volta a fase atual (trabalho ou descanso) para o início">Reiniciar
+        fase</button>
+
+      <!-- Retorna ao início da fase de trabalho do ciclo atual -->
+      <button class="btn" id="restartCycleBtn" title="Volta ao início do trabalho do ciclo atual">Reiniciar
+        ciclo</button>
+
+      <!-- Reinicia toda a contagem, retornando ao primeiro ciclo -->
+      <button class="btn" id="resetAllBtn" title="Volta ao Ciclo 1">Zerar tudo</button>
+    </section>
+
+  </div>
+
+  <!-- Painel de configurações, inicialmente escondido -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-panel">
+
+      <!-- Título do painel -->
+      <h2>Configurações</h2>
+
+      <!-- Campo para configurar a duração do trabalho em minutos -->
+      <label for="workInput">Tempo de trabalho (minutos)</label>
+      <input type="number" id="workInput" min="1" max="180" step="1" />
+
+      <!-- Campo para configurar a duração do descanso em minutos -->
+      <label for="restInput">Tempo de descanso (minutos)</label>
+      <input type="number" id="restInput" min="1" max="60" step="1" />
+
+      <!-- Botões para cancelar ou salvar as alterações -->
+      <div class="settings-actions">
+
+        <!-- Fecha as configurações sem salvar as alterações -->
+        <button class="btn" id="cancelSettingsBtn">Cancelar</button>
+
+        <!-- Salva as configurações definidas pelo usuário -->
+        <button class="btn primary" id="saveSettingsBtn">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arquivo de áudio utilizado como alarme ao final de uma fase -->
+  <audio id="alarmSound" src="sounds/alarm.mp3" preload="auto"></audio>
+
+  <!-- Carrega a lógica da aplicação, responsável pelos eventos e pelo funcionamento do temporizador -->
+  <script src="renderer.js"></script>
+</body>
+
+</html>
